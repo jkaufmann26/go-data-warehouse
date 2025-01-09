@@ -46,7 +46,7 @@ CREATE TABLE date_dimension
 );
 
 INSERT INTO date_dimension
-    (date_val, full_day_description, day_of_week, calendar_month, calendar_year, fiscal_month, weekday_indicator)
+    (date_val, full_day_description, day_of_week, calendar_month, calendar_year, fiscal_month, holiday_indicator, weekday_indicator)
 SELECT
     day,
     rtrim(to_char(day, 'Month')) || to_char(day, ' DD, YYYY'),
@@ -54,6 +54,7 @@ SELECT
     rtrim(to_char(day, 'Month')),
     date_part('year', day),
     'F' || to_char(day, 'YYYY-MM'),
+    FALSE,
     CASE
         WHEN date_part('isodow', day) IN (6, 7) THEN FALSE
         ELSE TRUE

@@ -2,8 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"go-data-warehouse/internal"
+	"go-data-warehouse/internal/psql"
 	"time"
 
 	"github.com/testcontainers/testcontainers-go"
@@ -12,17 +11,17 @@ import (
 )
 
 func main() {
+	// initializing docker container and fetching port it booted on
 	container := mustDockerize(context.Background())
 	port, err := container.Container.MappedPort(context.Background(), "5432")
 	if err != nil {
 		panic(err)
 	}
+
+	// connecting to db
 	postgresUri := "postgres://postgres:postgres@localhost:" + port.Port() + "/datawarehouse?sslmode=disable"
-	db := internal.MustOpen(postgresUri)
-	_, err = db.Query("")
-	if err != nil {
-		fmt.Print(err)
-	}
+	db := psql.MustOpen(postgresUri)
+
 	container.Terminate(context.Background())
 }
 
@@ -33,7 +32,7 @@ func mustDockerize(ctx context.Context) postgres.PostgresContainer {
 		postgres.WithPassword("postgres"),
 		postgres.WithDatabase("datawarehouse"),
 		postgres.WithInitScripts(
-			"/Users/jkaufmann/Desktop/sbc-microservices/go-data-warehouse/init/1_init.up.sql",
+			"/Users/jkaufmann/Desktop/sbc-microservices/go-data-warehouse/migrations/1_init.up.sql",
 		),
 		testcontainers.WithWaitStrategy(
 			wait.ForLog("database system is ready to accept connections").

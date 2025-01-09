@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"go-data-warehouse/internal"
 	"time"
 
@@ -18,9 +19,9 @@ func main() {
 	}
 	postgresUri := "postgres://postgres:postgres@localhost:" + port.Port() + "/datawarehouse?sslmode=disable"
 	db := internal.MustOpen(postgresUri)
-	_, err = db.Query("SELECT * FROM test")
+	_, err = db.Query("")
 	if err != nil {
-		panic("Wow big fail")
+		fmt.Print(err)
 	}
 	container.Terminate(context.Background())
 }

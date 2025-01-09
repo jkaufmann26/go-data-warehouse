@@ -22,6 +22,7 @@ require (
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
+	github.com/gocarina/gocsv v0.0.0-20240520201108-78e41c74b4b1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/jackc/pgx/v5 v5.7.2 // indirect

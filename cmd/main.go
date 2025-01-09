@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"go-data-warehouse/internal/ecommerce"
 	"go-data-warehouse/internal/psql"
+	"os"
 	"time"
 
 	"github.com/testcontainers/testcontainers-go"
@@ -21,6 +24,19 @@ func main() {
 	// connecting to db
 	postgresUri := "postgres://postgres:postgres@localhost:" + port.Port() + "/datawarehouse?sslmode=disable"
 	db := psql.MustOpen(postgresUri)
+
+	store := ecommerce.NewDataStore(db)
+
+	// initializng a new data ingestion service with a db
+	dataIngestion := ecommerce.NewDataIngestionService(*store)
+
+	file, err := os.Open("../data/data.csv")
+	if err != nil {
+		fmt.Print(" an error occurred while attempting to open the file")
+	}
+	defer file.Close()
+
+	dataIngestion.IngestFile(file)
 
 	container.Terminate(context.Background())
 }

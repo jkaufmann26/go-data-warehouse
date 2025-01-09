@@ -14,6 +14,7 @@ CREATE TABLE sales (
     product_key uuid UNIQUE,
     date_key uuid UNIQUE,
     customer_key uuid UNIQUE,
+    region_key uuid UNIQUE,
     sales_quantity SMALLINT,
     unit_price DOUBLE PRECISION,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,    
@@ -25,6 +26,15 @@ DROP TABLE IF EXISTS customers;
 CREATE TABLE customers (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     customer_id TEXT UNIQUE,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,    
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    deleted_at timestamp without time zone DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS region;
+CREATE TABLE region (
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    region_name TEXT,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,    
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp without time zone DEFAULT NULL

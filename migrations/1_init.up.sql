@@ -11,10 +11,11 @@ CREATE TABLE products (
 DROP TABLE IF EXISTS sales;
 CREATE TABLE sales (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    product_key uuid UNIQUE,
-    date_key uuid UNIQUE,
-    customer_key uuid UNIQUE,
-    region_key uuid UNIQUE,
+    invoice_id TEXT UNIQUE,
+    product_key uuid,
+    date_key uuid,
+    customer_key TEXT,
+    region_key uuid,
     sales_quantity SMALLINT,
     unit_price DOUBLE PRECISION,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,    
@@ -24,17 +25,16 @@ CREATE TABLE sales (
 
 DROP TABLE IF EXISTS customers;
 CREATE TABLE customers (
-    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    customer_id TEXT UNIQUE,
+    id TEXT PRIMARY KEY,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,    
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp without time zone DEFAULT NULL
 );
 
 DROP TABLE IF EXISTS region;
-CREATE TABLE region (
+CREATE TABLE regions (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    region_name TEXT,
+    region_name TEXT UNIQUE,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,    
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp without time zone DEFAULT NULL
@@ -44,7 +44,7 @@ CREATE TABLE region (
 DROP TABLE IF EXISTS date_dimension;
 CREATE TABLE date_dimension
 (
-    date_key uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     date_val DATE,
     full_day_description TEXT,
     day_of_week TEXT,

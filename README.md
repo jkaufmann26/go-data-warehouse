@@ -11,4 +11,7 @@
 - Data was found from: https://www.kaggle.com/datasets/carrie1/ecommerce-data/data
 
 TODO:
-- Update Ingest to process in parallel with safe transactions 
+- Update Ingest to process in parallel with safe transactions
+- Finish Question. Maybe get returned
+- Clean up Upsert product to use a hash instead unique keying off a sku. This allows for slow changing dimension
+ 

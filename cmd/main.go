@@ -7,6 +7,7 @@ import (
 	"go-data-warehouse/internal/ecommerce"
 	"go-data-warehouse/internal/psql"
 	"os"
+	"time"
 )
 
 func main() {
@@ -32,5 +33,8 @@ func main() {
 	}
 	defer file.Close()
 
+	start := time.Now()
 	dataIngestion.IngestFile(file)
+	jobLength := time.Since(start)
+	fmt.Println("Jobs Done. Time taken: " + jobLength.String())
 }

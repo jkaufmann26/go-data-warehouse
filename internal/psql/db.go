@@ -20,8 +20,6 @@ func Open(uri string) (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db.SetMaxOpenConns(3)
-	db.SetMaxIdleConns(3)
 
 	return db, nil
 }

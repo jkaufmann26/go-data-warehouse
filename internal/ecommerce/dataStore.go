@@ -40,6 +40,7 @@ type Date struct {
 type Sale struct {
 	Id            string  `db:"id"`
 	InvoiceId     string  `db:"invoice_id"`
+	ReceiptKey    string  `db:"receipt_key"`
 	ProductKey    string  `db:"product_key"`
 	DateKey       string  `db:"date_key"`
 	CustomerKey   string  `db:"customer_key"`
@@ -59,7 +60,7 @@ type Customer struct {
 
 func (o *Store) upsertProduct(product Product) (Product, error) {
 	product.Id = uuid.NewString()
-	_, err := o.db.NamedQuery(
+	rows, err := o.db.NamedQuery(
 		`INSERT INTO products (
 		id,
 		sku,
@@ -75,12 +76,13 @@ func (o *Store) upsertProduct(product Product) (Product, error) {
 	if err != nil {
 		return Product{}, fmt.Errorf("error inserting products: %w", err)
 	}
+	rows.Close()
 
 	return product, nil
 }
 
 func (o *Store) upsertCustomer(customer Customer) (Customer, error) {
-	_, err := o.db.NamedExec(
+	rows, err := o.db.NamedQuery(
 		`INSERT INTO customers (
 		id
 		) VALUES (
@@ -92,12 +94,13 @@ func (o *Store) upsertCustomer(customer Customer) (Customer, error) {
 	if err != nil {
 		return Customer{}, fmt.Errorf("error inserting customer: %w", err)
 	}
+	rows.Close()
 	return customer, nil
 }
 
 func (o *Store) upsertRegion(region Region) (Region, error) {
 	region.Id = uuid.NewString()
-	_, err := o.db.NamedExec(
+	rows, err := o.db.NamedQuery(
 		`INSERT INTO regions (
 		id,
 		region_name
@@ -109,11 +112,12 @@ func (o *Store) upsertRegion(region Region) (Region, error) {
 	if err != nil {
 		return Region{}, fmt.Errorf("error inserting region: %w", err)
 	}
+	rows.Close()
 	return region, nil
 }
 
 func (o *Store) getDate(date string) (Date, error) {
-	format := "1/2/2006 3:04"
+	format := "1/2/2006 15:04"
 	var dateValue time.Time
 	dateValue, err := time.Parse(format, date)
 	if err != nil {
@@ -132,10 +136,12 @@ func (o *Store) getDate(date string) (Date, error) {
 
 func (o *Store) insertSalesRecord(sale Sale) (Sale, error) {
 	sale.Id = uuid.NewString()
-	_, err := o.db.NamedExec(
+	sale.ReceiptKey = sale.InvoiceId + sale.ProductKey
+	rows, err := o.db.NamedQuery(
 		`INSERT INTO sales (
 		id,
 		invoice_id,
+		receipt_key,
 		product_key,
 		date_key,
 		customer_key,
@@ -145,18 +151,20 @@ func (o *Store) insertSalesRecord(sale Sale) (Sale, error) {
 		) VALUES (
 		:id,
 		:invoice_id,
+		:receipt_key,
 		:product_key,
 		:date_key,
 		:customer_key,
 		:region_key,
 		:sales_quantity,
 		:unit_price
-	) ON CONFLICT (invoice_id) DO UPDATE
+	) ON CONFLICT (receipt_key) DO UPDATE
 	SET updated_at = NOW()`,
 		sale)
 
 	if err != nil {
 		return Sale{}, fmt.Errorf("error sales record: %w", err)
 	}
+	rows.Close()
 	return sale, nil
 }

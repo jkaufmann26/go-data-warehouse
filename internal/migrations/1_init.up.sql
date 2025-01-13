@@ -11,7 +11,8 @@ CREATE TABLE products (
 DROP TABLE IF EXISTS sales;
 CREATE TABLE sales (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    invoice_id TEXT UNIQUE,
+    invoice_id TEXT,
+    receipt_key TEXT UNIQUE, 
     product_key uuid,
     date_key uuid,
     customer_key TEXT,

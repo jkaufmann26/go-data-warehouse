@@ -1,7 +1,9 @@
 package ecommerce
 
 import (
+	"crypto/sha256"
 	"database/sql"
+	"encoding/hex"
 	"fmt"
 	"time"
 
@@ -59,7 +61,7 @@ type Customer struct {
 }
 
 func (o *Store) upsertProduct(product Product) (Product, error) {
-	product.Id = uuid.NewString()
+	product.Id = HashValues(product.Sku, product.ItemDescription)
 	rows, err := o.db.NamedQuery(
 		`INSERT INTO products (
 		id,
@@ -69,8 +71,7 @@ func (o *Store) upsertProduct(product Product) (Product, error) {
 		:id,
 		:sku,
 		:item_description
-	)  ON CONFLICT (sku) DO UPDATE
-	SET updated_at = NOW(), sku=:sku, item_description=:item_description`,
+	)  ON CONFLICT (id) DO NOTHING`,
 		product)
 
 	if err != nil {
@@ -167,4 +168,26 @@ func (o *Store) insertSalesRecord(sale Sale) (Sale, error) {
 	}
 	rows.Close()
 	return sale, nil
+}
+
+func Hash(s string) string {
+	h := sha256.New()
+	h.Write([]byte(s))
+
+	encodedHash := hex.EncodeToString(h.Sum(nil))
+
+	uuid, err := uuid.FromBytes([]byte(encodedHash[0:16]))
+	if err != nil {
+		panic(err)
+	}
+
+	return uuid.String()
+}
+
+func HashValues(values ...any) string {
+	s := ""
+	for _, v := range values {
+		s += fmt.Sprintf("%v", v)
+	}
+	return Hash(s)
 }

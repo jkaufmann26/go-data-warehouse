@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS products; 
 CREATE TABLE products (
-    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    sku TEXT UNIQUE,
+    id TEXT PRIMARY KEY,
+    sku TEXT,
     item_description TEXT,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,    
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
@@ -13,11 +13,11 @@ CREATE TABLE sales (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     invoice_id TEXT,
     receipt_key TEXT UNIQUE, 
-    product_key uuid,
+    product_key TEXT,
     date_key uuid,
     customer_key TEXT,
     region_key uuid,
-    sales_quantity SMALLINT,
+    sales_quantity INTEGER,
     unit_price DOUBLE PRECISION,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,    
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,

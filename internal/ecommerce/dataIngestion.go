@@ -103,10 +103,10 @@ func (o *SalesRecord) toSale(productKey string, regionKey string, customerKey st
 	}
 	return Sale{
 		InvoiceId:     o.InvoiceNumber,
-		ProductKey:    productKey,
-		DateKey:       dateKey,
-		CustomerKey:   customerKey,
-		RegionKey:     regionKey,
+		ProductId:     productKey,
+		DateId:        dateKey,
+		CustomerId:    customerKey,
+		RegionId:      regionKey,
 		SalesQuantity: quantity,
 		UnitPrice:     float32(unitPrice),
 	}, nil

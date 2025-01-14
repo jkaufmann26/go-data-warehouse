@@ -42,11 +42,11 @@ type Date struct {
 type Sale struct {
 	Id            string  `db:"id"`
 	InvoiceId     string  `db:"invoice_id"`
-	ReceiptKey    string  `db:"receipt_key"`
-	ProductKey    string  `db:"product_key"`
-	DateKey       string  `db:"date_key"`
-	CustomerKey   string  `db:"customer_key"`
-	RegionKey     string  `db:"region_key"`
+	ReceiptId     string  `db:"receipt_id"`
+	ProductId     string  `db:"product_id"`
+	DateId        string  `db:"date_id"`
+	CustomerId    string  `db:"customer_id"`
+	RegionId      string  `db:"region_id"`
 	SalesQuantity int     `db:"sales_quantity"`
 	UnitPrice     float32 `db:"unit_price"`
 }
@@ -137,29 +137,29 @@ func (o *Store) getDate(date string) (Date, error) {
 
 func (o *Store) insertSalesRecord(sale Sale) (Sale, error) {
 	sale.Id = uuid.NewString()
-	sale.ReceiptKey = sale.InvoiceId + sale.ProductKey
+	sale.ReceiptId = sale.InvoiceId + sale.ProductId
 	rows, err := o.db.NamedQuery(
 		`INSERT INTO sales (
 		id,
 		invoice_id,
-		receipt_key,
-		product_key,
-		date_key,
-		customer_key,
-		region_key,
+		receipt_id,
+		product_id,
+		date_id,
+		customer_id,
+		region_id,
 		sales_quantity,
 		unit_price
 		) VALUES (
 		:id,
 		:invoice_id,
-		:receipt_key,
-		:product_key,
-		:date_key,
-		:customer_key,
-		:region_key,
+		:receipt_id,
+		:product_id,
+		:date_id,
+		:customer_id,
+		:region_id,
 		:sales_quantity,
 		:unit_price
-	) ON CONFLICT (receipt_key) DO UPDATE
+	) ON CONFLICT (receipt_id) DO UPDATE
 	SET updated_at = NOW()`,
 		sale)
 

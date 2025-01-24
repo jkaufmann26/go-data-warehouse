@@ -1,8 +1,8 @@
 # go-data-warehouse
 - This project is to give a breakdown of how I would approach a datawarehous based off Ralph Kimball's: The Data Warehouse Tool Kit
 
-- Setup: Run Docker-compose up in to generate the DB with needed migrations.
-- Run Main: to ingest the data csv
+- Setup: Run `Docker-compose up` in to generate the DB with needed migrations.
+- Run Main: to ingest the data csv `go run main.go`
 
 - /data/questions.sql to Answer data related questions that business could want. 
 
